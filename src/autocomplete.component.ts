@@ -1,5 +1,5 @@
-
-export function autocomplete(inputElement: HTMLInputElement, values: string[], sendRequest:Function): void {
+export function autocomplete(inputElement: HTMLInputElement, values: string[], sendRequest: Function): void {
+    if (!inputElement) return;
     let currentFocus: number;
 
     inputElement.addEventListener("input", debounce(handleInput, 300));
@@ -49,7 +49,9 @@ export function autocomplete(inputElement: HTMLInputElement, values: string[], s
         const inputValue: string = inputElement.value;
         closeAllLists();
 
-        if (!inputValue) { return; }
+        if (!inputValue) {
+            return;
+        }
         currentFocus = -1;
 
         const autocompleteContainer: HTMLDivElement = document.createElement("div");
@@ -57,13 +59,15 @@ export function autocomplete(inputElement: HTMLInputElement, values: string[], s
         autocompleteContainer.classList.add("autocomplete-items", "list-group");
         (inputElement.parentNode as HTMLElement).appendChild(autocompleteContainer);
 
-        for (let i = 0; i < values.length; i++) {
-            const currentValue: string = values[i];
-            if (currentValue.substr(0, inputValue.length).toUpperCase() === inputValue.toUpperCase()) {
-                const autocompleteItem: HTMLDivElement = document.createElement("div");
+        values.forEach(currentValue => {
+            if (currentValue.toUpperCase().startsWith(inputValue.toUpperCase())) {
+                const autocompleteItem = document.createElement("div");
                 autocompleteItem.classList.add("list-group-item");
-                autocompleteItem.innerHTML = `<strong>${currentValue.substr(0, inputValue.length)}</strong>`;
-                autocompleteItem.innerHTML += currentValue.substr(inputValue.length);
+
+                const matchingSubstring = currentValue.substring(0, inputValue.length);
+                const remainingSubstring = currentValue.substring(inputValue.length);
+
+                autocompleteItem.innerHTML = `<strong>${matchingSubstring}</strong>${remainingSubstring}`;
                 autocompleteItem.innerHTML += `<input type='hidden' value='${currentValue}'>`;
 
                 autocompleteItem.addEventListener("click", (event: Event) => {
@@ -74,7 +78,7 @@ export function autocomplete(inputElement: HTMLInputElement, values: string[], s
 
                 autocompleteContainer.appendChild(autocompleteItem);
             }
-        }
+        });
         sendRequest(inputElement.value)
     }
 
@@ -82,8 +86,9 @@ export function autocomplete(inputElement: HTMLInputElement, values: string[], s
         closeAllLists(event.target as HTMLElement);
     });
 }
-function debounce(func:any, timeout:number) {
-    let timer:any;
+
+function debounce(func: any, timeout: number) {
+    let timer: any;
     return () => {
         clearTimeout(timer);
         timer = setTimeout(() => {
