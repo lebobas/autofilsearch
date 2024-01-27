@@ -54,8 +54,7 @@ export function autocomplete(inputElement: HTMLInputElement, values: string[], s
 
         const autocompleteContainer: HTMLDivElement = document.createElement("div");
         autocompleteContainer.id = inputElement.id + "autocomplete-list";
-        autocompleteContainer.classList.add("autocomplete-items");
-        autocompleteContainer.classList.add("list-group");
+        autocompleteContainer.classList.add("autocomplete-items", "list-group");
         (inputElement.parentNode as HTMLElement).appendChild(autocompleteContainer);
 
         for (let i = 0; i < values.length; i++) {
