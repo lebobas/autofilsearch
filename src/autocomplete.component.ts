@@ -1,4 +1,7 @@
-export function autocomplete(inputElement: HTMLInputElement, values: string[], sendRequest: Function): void {
+import {PokemonState} from "./store";
+
+
+export function autocomplete(inputElement: HTMLInputElement, values: string[], callback: (query: string) => void): void {
     if (!inputElement) return;
     let currentFocus: number;
 
@@ -73,13 +76,13 @@ export function autocomplete(inputElement: HTMLInputElement, values: string[], s
                 autocompleteItem.addEventListener("click", (event: Event) => {
                     inputElement.value = (autocompleteItem.getElementsByTagName("input")[0] as HTMLInputElement).value;
                     closeAllLists();
-                    sendRequest(inputElement.value)
+                    callback(inputElement.value)
                 });
 
                 autocompleteContainer.appendChild(autocompleteItem);
             }
         });
-        sendRequest(inputElement.value)
+        callback(inputElement.value)
     }
 
     document.addEventListener("click", (event: Event) => {
