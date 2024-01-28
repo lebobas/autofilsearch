@@ -26,13 +26,21 @@ export interface PokemonState extends PokemonResponse{
 
 
 class Store extends Observable<PokemonState> {
+    private static instance: Store;
     private state: PokemonState;
     private reducer: Reducer;
 
-    constructor(initialState: PokemonState, reducer: Reducer) {
+    private constructor(initialState: PokemonState, reducer: Reducer) {
         super();
         this.state = initialState;
         this.reducer = reducer;
+    }
+
+    static getInstance(): Store {
+        if (!Store.instance) {
+            Store.instance = new Store({error:''} as PokemonState, reducer);
+        }
+        return Store.instance;
     }
 
     getState(): PokemonState {
@@ -49,5 +57,5 @@ class Store extends Observable<PokemonState> {
     }
 }
 
-export const pokemonStore = new Store({error:''} as PokemonState, reducer);
+export const pokemonStore = Store.getInstance();
 
